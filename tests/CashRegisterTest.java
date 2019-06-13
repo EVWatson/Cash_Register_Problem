@@ -53,5 +53,40 @@ public class CashRegisterTest {
 
     }
 
+    @Test
+    public void changeRequiredIsTheDifferenceBetweenTheCustomerFundsAndTheMerchandiseValue(){
+        int merchValue = 100;
+        int customerFunds = 110;
+
+        int expectedValue = 10;
+        int actualValue = cashRegister.calculateChange(customerFunds, merchValue);
+
+        assertEquals(expectedValue, actualValue);
+    }
+
+    @Test
+    public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided(){
+        int changeRequired = 10;
+        int cashRegisterFunds = 200;
+
+        boolean result = cashRegister.areCashRegisterFundsSufficient(cashRegisterFunds, changeRequired);
+
+        assertTrue(result);
+
+    }
+
+    @Test
+    public void whenCashRegisterDoesNotContainSufficientFundsChangeCannotBeProvided(){
+        int changeRequired = 10;
+        int cashRegisterFunds = 9;
+
+        boolean result = cashRegister.areCashRegisterFundsSufficient(cashRegisterFunds, changeRequired);
+
+        assertFalse(result);
+
+    }
+
+
+
 
 }

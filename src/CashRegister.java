@@ -1,17 +1,29 @@
 public class CashRegister {
-    public boolean areCustomerFundsSufficient(int custmerFunds, int merchValue) {
+    public boolean areCustomerFundsSufficient(int customerFunds, int merchandiseValue) {
         boolean result = false;
-        if(custmerFunds >= merchValue){
+        if(customerFunds >= merchandiseValue){
             result = true;
         }
         return result;
     }
 
-    public boolean doesCustomerRequireChange(int customerFunds, int merchValue) {
+    public boolean doesCustomerRequireChange(int customerFunds, int merchandiseValue) {
         boolean result = false;
-        if(customerFunds > merchValue){
+        if(customerFunds > merchandiseValue){
             result = true;
         }
         return  result;
+    }
+
+    public boolean areCashRegisterFundsSufficient(int cashRegisterFunds, int changeRequired) {
+        boolean result = false;
+        if(cashRegisterFunds >= changeRequired){
+            result = true;
+        }
+        return result;
+    }
+
+    public int calculateChange(int customerFunds, int merchandiseValue) {
+        return customerFunds - merchandiseValue;
     }
 }
