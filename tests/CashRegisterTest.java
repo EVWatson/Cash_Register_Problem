@@ -1,11 +1,13 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 public class CashRegisterTest {
 
-    CashRegister cashRegister;
+    private CashRegister cashRegister;
 
     @Before
     public void setUp(){
@@ -15,9 +17,9 @@ public class CashRegisterTest {
     @Test
     public void customerHasSufficientFundsToPayWhenAmountGivenIsGreaterOrEqualToMerchandiseValue(){
         int merchValue = 100;
-        int custmerFunds = 110;
+        int customerFunds = 110;
 
-        boolean result = cashRegister.areCustomerFundsSufficient(custmerFunds, merchValue);
+        boolean result = cashRegister.areCustomerFundsSufficient(customerFunds, merchValue);
 
         assertTrue(result);
     }
@@ -84,6 +86,17 @@ public class CashRegisterTest {
 
         assertFalse(result);
 
+    }
+
+    @Test
+    public void calculateTotalCashRegisterFundsReturnsCurrentCashRegisterValue(){
+        HashMap<String, Integer> cashRegisterContents = cashRegister.setUpCashRegister();
+
+        int expectedResult = 800;
+
+        int actualResult = cashRegister.calculateTotalCashRegisterFunds(cashRegisterContents);
+
+        assertEquals(expectedResult, actualResult);
     }
 
 
