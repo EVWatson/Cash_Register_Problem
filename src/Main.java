@@ -16,5 +16,7 @@ public class Main {
         Customer customer = new Customer();
         CashRegister cashRegister = new CashRegister();
 
+        System.out.println(merchandise.getMerchandise().get("Chocolate eclair"));
+
     }
 }

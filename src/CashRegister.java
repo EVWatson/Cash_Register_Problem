@@ -56,4 +56,26 @@ public class CashRegister {
 
         return sum;
     }
+
+//    possibly move this logic into a transaction Router/transaction calculator or similar?
+
+    public TransactionStatus determineTransactionType(int merchandisePrice, int customerPayment, int cashRegisterFunds) {
+        int change = calculateChange(customerPayment, merchandisePrice);
+        if (areCustomerFundsSufficient(customerPayment, merchandisePrice) && areCashRegisterFundsSufficient(cashRegisterFunds, change)) {
+            return TransactionStatus.CAN_PROCEED;
+        }
+        return TransactionStatus.CANNOT_PROCEED;
+    }
+
+    public String adviseTransactionType(TransactionStatus status) {
+        String result;
+        switch (status){
+            case CANNOT_PROCEED:
+                result = "Insufficient funds available";
+                break;
+            default: case CAN_PROCEED:
+                result = "Transaction can proceed";
+        }
+        return result;
+    }
 }

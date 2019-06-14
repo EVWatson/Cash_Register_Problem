@@ -8,10 +8,12 @@ import static org.junit.Assert.*;
 public class CashRegisterTest {
 
     private CashRegister cashRegister;
+    private Merchandise merchandise;
 
     @Before
     public void setUp(){
         this.cashRegister = new CashRegister();
+        this.merchandise = new Merchandise();
     }
 
     @Test
@@ -99,7 +101,47 @@ public class CashRegisterTest {
         assertEquals(expectedResult, actualResult);
     }
 
+    @Test
+    public void givenSufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCanProceed(){
+        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+        int customerPayment = 20;
+        int cashRegisterFunds = 800;
+        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
 
+        String expectedResult = "Transaction can proceed";
+
+        String actualResult = cashRegister.adviseTransactionType(status);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void givenInsufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCannotProceed(){
+        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+        int customerPayment = 10;
+        int cashRegisterFunds = 800;
+        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
+
+        String expectedResult = "Insufficient funds available";
+
+        String actualResult = cashRegister.adviseTransactionType(status);
+
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    public void givenSufficientCustomerPaymentAndInsufficientCashRegisterFundsTransactionCannotProceed(){
+        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+        int customerPayment = 100;
+        int cashRegisterFunds = 74;
+        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
+
+        String expectedResult = "Insufficient funds available";
+
+        String actualResult = cashRegister.adviseTransactionType(status);
+
+        assertEquals(expectedResult, actualResult);
+    }
 
 
 }
