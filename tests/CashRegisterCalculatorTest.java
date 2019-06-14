@@ -5,14 +5,16 @@ import java.util.HashMap;
 
 import static org.junit.Assert.*;
 
-public class CashRegisterTest {
+public class CashRegisterCalculatorTest {
 
-    private CashRegister cashRegister;
+    private CashRegisterCalculator cashRegisterCalculator;
     private Merchandise merchandise;
+    private CashRegister cashRegister;
 
     @Before
     public void setUp(){
         this.cashRegister = new CashRegister();
+        this.cashRegisterCalculator = new CashRegisterCalculator(cashRegister);
         this.merchandise = new Merchandise();
     }
 
@@ -21,7 +23,7 @@ public class CashRegisterTest {
         int merchValue = 100;
         int customerFunds = 110;
 
-        boolean result = cashRegister.areCustomerFundsSufficient(customerFunds, merchValue);
+        boolean result = cashRegisterCalculator.areCustomerFundsSufficient(customerFunds, merchValue);
 
         assertTrue(result);
     }
@@ -31,7 +33,7 @@ public class CashRegisterTest {
         int merchValue = 100;
         int customerFunds = 99;
 
-        boolean result = cashRegister.areCustomerFundsSufficient(customerFunds, merchValue);
+        boolean result = cashRegisterCalculator.areCustomerFundsSufficient(customerFunds, merchValue);
 
         assertFalse(result);
     }
@@ -41,7 +43,7 @@ public class CashRegisterTest {
         int merchValue = 100;
         int customerFunds = 100;
 
-        boolean result = cashRegister.doesCustomerRequireChange(customerFunds, merchValue);
+        boolean result = cashRegisterCalculator.doesCustomerRequireChange(customerFunds, merchValue);
 
         assertFalse(result);
     }
@@ -51,7 +53,7 @@ public class CashRegisterTest {
         int merchValue = 100;
         int customerFunds = 110;
 
-        boolean result = cashRegister.doesCustomerRequireChange(customerFunds, merchValue);
+        boolean result = cashRegisterCalculator.doesCustomerRequireChange(customerFunds, merchValue);
 
         assertTrue(result);
 
@@ -63,17 +65,18 @@ public class CashRegisterTest {
         int customerFunds = 110;
 
         int expectedValue = 10;
-        int actualValue = cashRegister.calculateChange(customerFunds, merchValue);
+        int actualValue = cashRegisterCalculator.calculateChange(customerFunds, merchValue);
 
         assertEquals(expectedValue, actualValue);
     }
 
     @Test
     public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided(){
-        int changeRequired = 10;
-        int cashRegisterFunds = 200;
+        int customerPayment = 50;
+        int merchandisePrice = merchandise.getMerchandise().get("Chocolate eclair");
 
-        boolean result = cashRegister.areCashRegisterFundsSufficient(cashRegisterFunds, changeRequired);
+
+        boolean result = cashRegisterCalculator.areCashRegisterFundsSufficient(customerPayment, merchandisePrice);
 
         assertTrue(result);
 
@@ -81,10 +84,11 @@ public class CashRegisterTest {
 
     @Test
     public void whenCashRegisterDoesNotContainSufficientFundsChangeCannotBeProvided(){
-        int changeRequired = 10;
-        int cashRegisterFunds = 9;
+        int customerPayment = 5000;
+        int merchandisePrice = merchandise.getMerchandise().get("Chocolate eclair");
 
-        boolean result = cashRegister.areCashRegisterFundsSufficient(cashRegisterFunds, changeRequired);
+
+        boolean result = cashRegisterCalculator.areCashRegisterFundsSufficient(customerPayment, merchandisePrice);
 
         assertFalse(result);
 
@@ -92,11 +96,10 @@ public class CashRegisterTest {
 
     @Test
     public void calculateTotalCashRegisterFundsReturnsCurrentCashRegisterValue(){
-        HashMap<String, Integer> cashRegisterContents = cashRegister.setUpCashRegister();
 
-        int expectedResult = 800;
+        int expectedResult = 334;
 
-        int actualResult = cashRegister.calculateTotalCashRegisterFunds(cashRegisterContents);
+        int actualResult = cashRegisterCalculator.calculateTotalCashRegisterFunds();
 
         assertEquals(expectedResult, actualResult);
     }
@@ -105,12 +108,12 @@ public class CashRegisterTest {
     public void givenSufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCanProceed(){
         int merch = merchandise.getMerchandise().get("Cheesecake slice");
         int customerPayment = 20;
-        int cashRegisterFunds = 800;
-        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
+
+        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
 
         String expectedResult = "Transaction can proceed";
 
-        String actualResult = cashRegister.adviseTransactionType(status);
+        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
 
         assertEquals(expectedResult, actualResult);
     }
@@ -119,12 +122,12 @@ public class CashRegisterTest {
     public void givenInsufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCannotProceed(){
         int merch = merchandise.getMerchandise().get("Cheesecake slice");
         int customerPayment = 10;
-        int cashRegisterFunds = 800;
-        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
+
+        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
 
         String expectedResult = "Insufficient funds available";
 
-        String actualResult = cashRegister.adviseTransactionType(status);
+        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
 
         assertEquals(expectedResult, actualResult);
     }
@@ -132,13 +135,13 @@ public class CashRegisterTest {
     @Test
     public void givenSufficientCustomerPaymentAndInsufficientCashRegisterFundsTransactionCannotProceed(){
         int merch = merchandise.getMerchandise().get("Cheesecake slice");
-        int customerPayment = 100;
-        int cashRegisterFunds = 74;
-        TransactionStatus status = cashRegister.determineTransactionType(merch, customerPayment, cashRegisterFunds);
+        int customerPayment = 1000;
+
+        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
 
         String expectedResult = "Insufficient funds available";
 
-        String actualResult = cashRegister.adviseTransactionType(status);
+        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
 
         assertEquals(expectedResult, actualResult);
     }

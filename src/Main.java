@@ -15,6 +15,7 @@ public class Main {
         Merchandise merchandise = new Merchandise();
         Customer customer = new Customer();
         CashRegister cashRegister = new CashRegister();
+        CashRegisterCalculator cashRegisterCalculator = new CashRegisterCalculator(cashRegister);
 
         System.out.println(merchandise.getMerchandise().get("Chocolate eclair"));
 
