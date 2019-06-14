@@ -12,6 +12,7 @@ public class CashRegisterCalculator {
     }
 
 
+
     public boolean areCustomerFundsSufficient(int customerFunds, int merchandiseValue) {
         boolean result = false;
         if(customerFunds >= merchandiseValue){

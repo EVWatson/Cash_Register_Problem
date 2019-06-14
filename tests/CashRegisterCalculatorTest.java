@@ -19,6 +19,36 @@ public class CashRegisterCalculatorTest {
     }
 
     @Test
+    public void whenFundsGivenAreGreaterThanMerchandiseValueTheCorrectChangeAmountIsReturned(){
+        int product = merchandise.getMerchandise().get("Whole gateau");
+        int customerPayment = 50;
+
+        int expectedChange = 20;
+
+        int actualChange = cashRegisterCalculator.calculateChange(customerPayment, product);
+
+        assertEquals(expectedChange, actualChange);
+    }
+
+    @Test
+    public void whenChangeRequiredIsGreaterThanAvailableCashRegisterFundsThrowsException(){
+        int product = merchandise.getMerchandise().get("Whole gateau");
+        int customerPayment = 400;
+
+        boolean exceptionThrown = false;
+        try {
+            cashRegisterCalculator.calculateChange(customerPayment, product);
+        } catch ()
+
+
+    }
+
+    @Test
+    public void whenChangeRequiredCannotBeMadeFromAvailableCashRegisterDenominationsThrowsException(){
+
+    }
+
+    @Test
     public void customerHasSufficientFundsToPayWhenAmountGivenIsGreaterOrEqualToMerchandiseValue(){
         int merchValue = 100;
         int customerFunds = 110;
@@ -48,16 +78,16 @@ public class CashRegisterCalculatorTest {
         assertFalse(result);
     }
 
-    @Test
-    public void whenFundsGivenAreGreaterThanMerchandiseValueTheCustomerWillReceiveChange(){
-        int merchValue = 100;
-        int customerFunds = 110;
-
-        boolean result = cashRegisterCalculator.doesCustomerRequireChange(customerFunds, merchValue);
-
-        assertTrue(result);
-
-    }
+//    @Test
+//    public void whenFundsGivenAreGreaterThanMerchandiseValueTheCustomerWillReceiveChange(){
+//        int merchValue = 100;
+//        int customerFunds = 110;
+//
+//        boolean result = cashRegisterCalculator.doesCustomerRequireChange(customerFunds, merchValue);
+//
+//        assertTrue(result);
+//
+//    }
 
     @Test
     public void changeRequiredIsTheDifferenceBetweenTheCustomerFundsAndTheMerchandiseValue(){
