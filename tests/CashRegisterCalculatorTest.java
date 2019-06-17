@@ -19,7 +19,7 @@ public class CashRegisterCalculatorTest {
     }
 
     @Test
-    public void whenFundsGivenAreGreaterThanMerchandiseValueTheCorrectChangeAmountIsReturned(){
+    public void whenFundsGivenAreGreaterThanMerchandiseValueTheCorrectChangeAmountIsReturned() throws InsufficientCashRegisterFundsException{
         int product = merchandise.getMerchandise().get("Whole gateau");
         int customerPayment = 50;
 
@@ -30,18 +30,20 @@ public class CashRegisterCalculatorTest {
         assertEquals(expectedChange, actualChange);
     }
 
-    @Test
-    public void whenChangeRequiredIsGreaterThanAvailableCashRegisterFundsThrowsException(){
-        int product = merchandise.getMerchandise().get("Whole gateau");
-        int customerPayment = 400;
-
-        boolean exceptionThrown = false;
-        try {
-            cashRegisterCalculator.calculateChange(customerPayment, product);
-        } catch ()
-
-
-    }
+//    @Test
+//    public void whenChangeRequiredIsGreaterThanAvailableCashRegisterFundsThrowsException(){
+//        int product = merchandise.getMerchandise().get("Whole gateau");
+//        int customerPayment = 400;
+//
+//        boolean exceptionThrown = false;
+//        try {
+//            cashRegisterCalculator.calculateChange(customerPayment, product);
+//        } catch (InsufficientCashRegisterFundsException e){
+//
+//        }
+//
+//
+//    }
 
     @Test
     public void whenChangeRequiredCannotBeMadeFromAvailableCashRegisterDenominationsThrowsException(){
@@ -69,13 +71,15 @@ public class CashRegisterCalculatorTest {
     }
 
     @Test
-    public void whenFundsGivenAreEqualToMerchandiseValueCustomerWillNotReceiveAnyChange(){
+    public void whenFundsGivenAreEqualToMerchandiseValueCustomerWillNotReceiveAnyChange() throws InsufficientCashRegisterFundsException{
         int merchValue = 100;
         int customerFunds = 100;
 
-        boolean result = cashRegisterCalculator.doesCustomerRequireChange(customerFunds, merchValue);
+        int expectedChange = 0;
 
-        assertFalse(result);
+        int actualChange = cashRegisterCalculator.calculateChange(customerFunds, merchValue);
+
+        assertEquals(expectedChange, actualChange);
     }
 
 //    @Test
@@ -90,7 +94,7 @@ public class CashRegisterCalculatorTest {
 //    }
 
     @Test
-    public void changeRequiredIsTheDifferenceBetweenTheCustomerFundsAndTheMerchandiseValue(){
+    public void changeRequiredIsTheDifferenceBetweenTheCustomerFundsAndTheMerchandiseValue() throws InsufficientCashRegisterFundsException{
         int merchValue = 100;
         int customerFunds = 110;
 
@@ -101,26 +105,35 @@ public class CashRegisterCalculatorTest {
     }
 
     @Test
-    public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided(){
+    public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided() throws InsufficientCashRegisterFundsException{
         int customerPayment = 50;
         int merchandisePrice = merchandise.getMerchandise().get("Chocolate eclair");
 
+        int expectedChange = 40;
 
-        boolean result = cashRegisterCalculator.areCashRegisterFundsSufficient(customerPayment, merchandisePrice);
 
-        assertTrue(result);
+        int actualChange = cashRegisterCalculator.calculateChange(customerPayment, merchandisePrice);
+
+        assertEquals(expectedChange, actualChange);
 
     }
 
     @Test
-    public void whenCashRegisterDoesNotContainSufficientFundsChangeCannotBeProvided(){
+    public void whenCashRegisterDoesNotContainSufficientFundsToProvideChangeExceptionIsThrown() {
         int customerPayment = 5000;
         int merchandisePrice = merchandise.getMerchandise().get("Chocolate eclair");
 
+        String expectedMessage = "Unable to provide change; insufficient funds available";
 
-        boolean result = cashRegisterCalculator.areCashRegisterFundsSufficient(customerPayment, merchandisePrice);
+        String actualMessage = "";
+        try {
+            cashRegisterCalculator.calculateChange(customerPayment, merchandisePrice);
+        }
+        catch (InsufficientCashRegisterFundsException message) {
+           actualMessage = message.getMessage();
+        }
 
-        assertFalse(result);
+        assertEquals(expectedMessage, actualMessage);
 
     }
 
@@ -134,47 +147,47 @@ public class CashRegisterCalculatorTest {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    public void givenSufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCanProceed(){
-        int merch = merchandise.getMerchandise().get("Cheesecake slice");
-        int customerPayment = 20;
-
-        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
-
-        String expectedResult = "Transaction can proceed";
-
-        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
-
-        assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void givenInsufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCannotProceed(){
-        int merch = merchandise.getMerchandise().get("Cheesecake slice");
-        int customerPayment = 10;
-
-        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
-
-        String expectedResult = "Insufficient funds available";
-
-        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
-
-        assertEquals(expectedResult, actualResult);
-    }
-
-    @Test
-    public void givenSufficientCustomerPaymentAndInsufficientCashRegisterFundsTransactionCannotProceed(){
-        int merch = merchandise.getMerchandise().get("Cheesecake slice");
-        int customerPayment = 1000;
-
-        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
-
-        String expectedResult = "Insufficient funds available";
-
-        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
-
-        assertEquals(expectedResult, actualResult);
-    }
+//    @Test
+//    public void givenSufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCanProceed(){
+//        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+//        int customerPayment = 20;
+//
+//        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
+//
+//        String expectedResult = "Transaction can proceed";
+//
+//        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
+//
+//        assertEquals(expectedResult, actualResult);
+//    }
+//
+//    @Test
+//    public void givenInsufficientCustomerPaymentAndSufficientCashRegisterFundsTransactionCannotProceed(){
+//        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+//        int customerPayment = 10;
+//
+//        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
+//
+//        String expectedResult = "Insufficient funds available";
+//
+//        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
+//
+//        assertEquals(expectedResult, actualResult);
+//    }
+//
+//    @Test
+//    public void givenSufficientCustomerPaymentAndInsufficientCashRegisterFundsTransactionCannotProceed(){
+//        int merch = merchandise.getMerchandise().get("Cheesecake slice");
+//        int customerPayment = 1000;
+//
+//        TransactionStatus status = cashRegisterCalculator.determineTransactionType(merch, customerPayment);
+//
+//        String expectedResult = "Insufficient funds available";
+//
+//        String actualResult = cashRegisterCalculator.adviseTransactionType(status);
+//
+//        assertEquals(expectedResult, actualResult);
+//    }
 
 
 }

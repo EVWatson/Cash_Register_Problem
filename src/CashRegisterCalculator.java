@@ -5,9 +5,10 @@ import java.util.Map;
 
 public class CashRegisterCalculator {
 
-    CashRegister cashRegister;
+    private CashRegister cashRegister;
 
     public CashRegisterCalculator(CashRegister cashRegister){
+
         this.cashRegister = cashRegister;
     }
 
@@ -21,24 +22,17 @@ public class CashRegisterCalculator {
         return result;
     }
 
-    public boolean doesCustomerRequireChange(int customerFunds, int merchandiseValue) {
-        boolean result = false;
-        if(customerFunds > merchandiseValue){
-            result = true;
-        }
-        return  result;
-    }
 
-    public boolean areCashRegisterFundsSufficient(int customerFunds, int merchandiseValue) {
-        boolean result = false;
-        if(calculateTotalCashRegisterFunds() >= calculateChange(customerFunds, merchandiseValue)){
-            result = true;
-        }
-        return result;
-    }
 
-    public int calculateChange(int customerFunds, int merchandiseValue) {
-        return customerFunds - merchandiseValue;
+    public int calculateChange(int customerFunds, int merchandiseValue) throws InsufficientCashRegisterFundsException{
+        int change = 0;
+        if(customerFunds > merchandiseValue) {
+            change = customerFunds - merchandiseValue;
+        }
+        if(change > calculateTotalCashRegisterFunds()){
+            throw new InsufficientCashRegisterFundsException("Unable to provide change; insufficient funds available");
+        }
+        return change;
     }
 
 
@@ -86,13 +80,13 @@ public class CashRegisterCalculator {
 
 //    possibly move this logic into a transaction Router/transaction calculator or similar?
 
-    public TransactionStatus determineTransactionType(int merchandisePrice, int customerPayment) {
-
-        if (areCustomerFundsSufficient(customerPayment, merchandisePrice) && areCashRegisterFundsSufficient(customerPayment, merchandisePrice)) {
-            return TransactionStatus.CAN_PROCEED;
-        }
-        return TransactionStatus.CANNOT_PROCEED;
-    }
+//    public TransactionStatus determineTransactionType(int merchandisePrice, int customerPayment) {
+//
+//        if (areCustomerFundsSufficient(customerPayment, merchandisePrice) && areCashRegisterFundsSufficient(customerPayment, merchandisePrice)) {
+//            return TransactionStatus.CAN_PROCEED;
+//        }
+//        return TransactionStatus.CANNOT_PROCEED;
+//    }
 
     public String adviseTransactionType(TransactionStatus status) {
         String result;

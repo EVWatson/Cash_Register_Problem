@@ -27,6 +27,7 @@ public class CashRegister {
     }
 
     public HashMap<String, Integer> getCashRegisterDenominations() {
+
         return cashRegisterDenominations;
     }
 }
