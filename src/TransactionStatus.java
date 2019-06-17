@@ -1,5 +1,5 @@
 public enum TransactionStatus {
-    CAN_PROCEED,
+    SUCCESSFUL,
     CANNOT_PROCEED,
 
 }

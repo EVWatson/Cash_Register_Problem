@@ -16,8 +16,18 @@ public class Main {
         Customer customer = new Customer();
         CashRegister cashRegister = new CashRegister();
         CashRegisterCalculator cashRegisterCalculator = new CashRegisterCalculator(cashRegister);
+        TransactionManager transactionManager = new TransactionManager(cashRegisterCalculator);
 
-        System.out.println(merchandise.getMerchandise().get("Chocolate eclair"));
 
+        int merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
+        int customerMoney = 200;
+
+
+        try{
+            transactionManager.conductTransaction(customerMoney, merchanseAmount);
+        }
+        catch (Exception message){
+            System.out.println(message.getMessage());
+        }
     }
 }
