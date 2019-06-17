@@ -51,23 +51,34 @@ public class CashRegisterCalculatorTest {
     }
 
     @Test
-    public void customerHasSufficientFundsToPayWhenAmountGivenIsGreaterOrEqualToMerchandiseValue(){
+    public void whenCustomerPaymentIsEqualToOrGreaterThanMerchandiseValueChangeIsCalculated() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
         int merchValue = 100;
         int customerFunds = 110;
 
-        boolean result = cashRegisterCalculator.areCustomerFundsSufficient(customerFunds, merchValue);
+        int expectedChange = 10;
 
-        assertTrue(result);
+        int actualChange = cashRegisterCalculator.conductTransaction(customerFunds, merchValue);
+
+        assertEquals(expectedChange, actualChange);
     }
 
     @Test
-    public void whenFundsGivenAreLessThanMerchandiseValueCustomerIsUnableProceedWithTransaction(){
+    public void whenFundsGivenAreLessThanMerchandiseValueExceptionIsThrown() throws InsufficientCashRegisterFundsException{
         int merchValue = 100;
         int customerFunds = 99;
 
-        boolean result = cashRegisterCalculator.areCustomerFundsSufficient(customerFunds, merchValue);
+        String expectedMessage = "Unable to process transaction; insufficient customer payment.";
 
-        assertFalse(result);
+        String actualMessage = "";
+        try {
+            cashRegisterCalculator.conductTransaction(customerFunds, merchValue);
+        }
+        catch (InsufficientCustomerPaymentException message) {
+            actualMessage = message.getMessage();
+        }
+
+        assertEquals(expectedMessage, actualMessage);
+
     }
 
     @Test

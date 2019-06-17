@@ -13,13 +13,15 @@ public class CashRegisterCalculator {
     }
 
 
-
-    public boolean areCustomerFundsSufficient(int customerFunds, int merchandiseValue) {
-        boolean result = false;
+    public int conductTransaction(int customerFunds, int merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+        int transactionResult = 0;
         if(customerFunds >= merchandiseValue){
-            result = true;
+           transactionResult = calculateChange(customerFunds, merchandiseValue);
         }
-        return result;
+        if(customerFunds<merchandiseValue){
+            throw new InsufficientCustomerPaymentException("Unable to process transaction; insufficient customer payment.");
+        }
+        return transactionResult;
     }
 
 
