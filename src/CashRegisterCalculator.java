@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 
 public class CashRegisterCalculator {
@@ -5,11 +6,11 @@ public class CashRegisterCalculator {
     private CashRegister cashRegister;
     private int cashRegisterBalance;
 
+
     public CashRegisterCalculator(CashRegister cashRegister){
         this.cashRegister = cashRegister;
         this.cashRegisterBalance = calculateTotalCashRegisterFunds();
     }
-
 
 
     private int calculateTotalCashRegisterFunds(){
@@ -22,5 +23,9 @@ public class CashRegisterCalculator {
 
     public int getCashRegisterBalance() {
         return cashRegisterBalance;
+    }
+
+    public HashMap<Double, Integer> getCashRegisterDenominations() {
+        return this.cashRegister.getCashRegisterDenominations();
     }
 }

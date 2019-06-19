@@ -20,7 +20,7 @@ public class Main {
 
 
         int merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
-        int customerMoney = 200;
+        int customerMoney = 2;
 
 
         try{

@@ -1,13 +1,17 @@
 public class TransactionManager {
 
     private CashRegisterCalculator cashRegisterCalculator;
+    private double cashRegisterDenomination;
+
 
     public TransactionManager(CashRegisterCalculator cashRegisterCalculator){
         this.cashRegisterCalculator = cashRegisterCalculator;
+        double denominationValue = 0.0;
+        this.cashRegisterDenomination = cashRegisterCalculator.getCashRegisterDenominations().get(denominationValue);
     }
 
-    public int conductTransaction(int customerFunds, int merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
-        int transactionResult = 0;
+    public double conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+        double transactionResult = 0.00;
         if(customerFunds >= merchandiseValue){
             transactionResult = calculateChange(customerFunds, merchandiseValue);
         }
@@ -19,8 +23,8 @@ public class TransactionManager {
 
 
 
-    private int calculateChange(int customerFunds, int merchandiseValue) throws InsufficientCashRegisterFundsException{
-        int change = 0;
+    private double calculateChange(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException{
+        double change = 0.00;
         if(customerFunds > merchandiseValue) {
             change = customerFunds - merchandiseValue;
         }
@@ -28,6 +32,32 @@ public class TransactionManager {
             throw new InsufficientCashRegisterFundsException("Unable to provide change");
         }
         return change;
+    }
+
+    public double giveChange(double customerFunds, double merchandiseValue)throws InsufficientCashRegisterFundsException {
+        if (this.calculateChange(customerFunds, merchandiseValue) == this.cashRegisterDenomination){
+            checkIfSufficient();
+        } else {
+//            map to next denomination
+        }
+        else {
+            throw new InsufficientCashRegisterFundsException("Unable to provide change");
+        }
+    }
+
+    public void checkIfSufficient(double customerFunds, double merchandiseValue) throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        double requiredChange = this.calculateChange(customerFunds, merchandiseValue);
+        double cashRegisterDenominationValue = this.cashRegisterCalculator.getCashRegisterDenominations().get(requiredChange).doubleValue();
+        if(requiredChange == cashRegisterDenominationValue){
+            System.out.println("Change given");
+        }
+        if(requiredChange > cashRegisterDenominationValue){
+            requiredChange = requiredChange - cashRegisterDenominationValue;
+//            move to next denomination
+        }
+        if(cashRegisterDenominationValue == 0){
+//            move to next denomination
+        }
     }
 
 
