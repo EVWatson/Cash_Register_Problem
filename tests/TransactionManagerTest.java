@@ -123,19 +123,19 @@ public class TransactionManagerTest {
         assertEquals(expectedChangeDenomination,actualChangeDenomination, 0);
     }
 
-    @Test
-    public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsChecked()throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
-        int merchandisePrice = merchandise.getMerchandise().get("Whole gateau");
-//        gateau = $30
-        int customerPayment = 40;
-        this.cashRegisterCalculator.getCashRegisterDenominations().remove(10.00);
-        this.transactionManager.conductTransaction(customerPayment, merchandisePrice);
-
-        double expectedChangeDenomination = 5.00 + 5.00;
-        double actualChangeDenomination = transactionManager.giveChange(customerPayment, merchandisePrice);
-
-        assertEquals(expectedChangeDenomination,actualChangeDenomination, 0);
-    }
+//    @Test
+//    public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsChecked()throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+//        int merchandisePrice = merchandise.getMerchandise().get("Whole gateau");
+////        gateau = $30
+//        int customerPayment = 40;
+//        this.cashRegisterCalculator.getCashRegisterDenominations().remove(10.00);
+//        this.transactionManager.conductTransaction(customerPayment, merchandisePrice);
+//
+//        double expectedChangeDenomination = 5.00 + 5.00;
+//        double actualChangeDenomination = transactionManager.giveChange(customerPayment, merchandisePrice);
+//
+//        assertEquals(expectedChangeDenomination,actualChangeDenomination, 0);
+//    }
 
     @Test
     public void whenChangeCannotBeGivenWithASingleDenominationMultipleDenominationsAreUsed(){

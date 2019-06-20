@@ -1,13 +1,14 @@
+import java.util.*;
+
 public class TransactionManager {
 
     private CashRegisterCalculator cashRegisterCalculator;
-    private double cashRegisterDenomination;
+
 
 
     public TransactionManager(CashRegisterCalculator cashRegisterCalculator){
         this.cashRegisterCalculator = cashRegisterCalculator;
-        double denominationValue = 0.0;
-        this.cashRegisterDenomination = cashRegisterCalculator.getCashRegisterDenominations().get(denominationValue);
+
     }
 
     public double conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
@@ -34,9 +35,11 @@ public class TransactionManager {
         return change;
     }
 
-    public double giveChange(double customerFunds, double merchandiseValue)throws InsufficientCashRegisterFundsException {
-        if (this.calculateChange(customerFunds, merchandiseValue) == this.cashRegisterDenomination){
-            checkIfSufficient();
+    public double giveChange(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException {
+//        if (this.calculateChange(customerFunds, merchandiseValue) == this.cashRegisterCalculator.getCashRegisterDenominations().get()){
+        double change = this.calculateChange(customerFunds, merchandiseValue);
+        if(this.cashRegisterCalculator.getCashRegisterDenominations().containsKey(change)){
+            checkIfSufficient(customerFunds, merchandiseValue, change);
         } else {
 //            map to next denomination
         }
@@ -45,8 +48,19 @@ public class TransactionManager {
         }
     }
 
-    public void checkIfSufficient(double customerFunds, double merchandiseValue) throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
-        double requiredChange = this.calculateChange(customerFunds, merchandiseValue);
+    public void checkIfSufficient(double customerFunds, double merchandiseValue, double requiredChange) {
+        // get all keys from denominations from register
+        Set<Double> keySet = cashRegisterCalculator.getCashRegisterDenominations().keySet();
+        //create arraylist from set
+        ArrayList<Double> keyslist = new ArrayList<>();
+        keyslist.addAll(keySet);
+        //sort list
+        Collections.sort(keyslist);
+        Collections.reverse(keyslist);
+        //iterate over all the denominations
+        for(Double key : keyslist){
+            System.out.println(key);
+        }
         double cashRegisterDenominationValue = this.cashRegisterCalculator.getCashRegisterDenominations().get(requiredChange).doubleValue();
         if(requiredChange == cashRegisterDenominationValue){
             System.out.println("Change given");
