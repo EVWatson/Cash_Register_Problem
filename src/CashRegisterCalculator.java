@@ -24,6 +24,10 @@ public class CashRegisterCalculator {
        return this.getCashRegisterDenominations().get(key) * key;
     }
 
+//    public Double getNumberOfDenominationRequiredForValue(Double Double key){
+//        return this.getCashRegisterDenominations().get(key);
+//    }
+
     public int getCashRegisterBalance() {
         return cashRegisterBalance;
     }
