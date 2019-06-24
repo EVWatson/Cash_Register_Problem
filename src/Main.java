@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Main {
 
@@ -20,14 +21,17 @@ public class Main {
 
 
         int merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
-        int customerMoney = 2000;
+//        cashRegister.getCashRegisterDenominations().remove(10.00);
+        int customerMoney = 40;
 
 
         try{
-            transactionManager.conductTransaction(customerMoney, merchanseAmount);
+            ArrayList<Double> change = transactionManager.conductTransaction(customerMoney, merchanseAmount);
+            System.out.println(change);
         }
         catch (Exception message){
             System.err.println(message.getMessage());
         }
+
     }
 }

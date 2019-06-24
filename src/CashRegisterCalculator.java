@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CashRegisterCalculator {
 
@@ -19,6 +18,10 @@ public class CashRegisterCalculator {
             valueInDollars += denomination.getValue() * denomination.getKey();
         }
         return valueInDollars;
+    }
+
+    public Double calculateTotalIndividualDenominationValue(Double key){
+       return this.getCashRegisterDenominations().get(key) * key;
     }
 
     public int getCashRegisterBalance() {
