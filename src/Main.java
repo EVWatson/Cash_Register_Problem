@@ -26,7 +26,7 @@ public class Main {
 
 
         try{
-            ArrayList<Double> change = transactionManager.conductTransaction(customerMoney, merchanseAmount);
+            Double change = transactionManager.conductTransaction(customerMoney, merchanseAmount);
             System.out.println(change);
         }
         catch (Exception message){

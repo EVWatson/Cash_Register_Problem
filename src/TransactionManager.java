@@ -12,9 +12,9 @@ public class TransactionManager {
 
     }
 
-    public ArrayList<Double> conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+    public Double conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
         double changeValue = 0.00;
-        ArrayList<Double> changeInDenominations = new ArrayList<>();
+
         if(customerFunds == merchandiseValue){
             System.out.println("no change needed");
         }
@@ -26,32 +26,17 @@ public class TransactionManager {
             if(changeValue > cashRegisterCalculator.getCashRegisterBalance()){
             throw new InsufficientCashRegisterFundsException("Unable to provide change");
             }
-        } else {
-            changeInDenominations.add(giveChange(customerFunds, merchandiseValue, changeValue));
-            }
-        return changeInDenominations;
+        }
+        return changeValue;
     }
 
 
-
-
-    public Double giveChange(double customerFunds, double merchandiseValue, double requiredChange)  {
-        Integer amountOfDenominationInRegister = cashRegisterCalculator.getCashRegisterDenominations().get(requiredChange);
-//        Double amountOfDenominationInRegister = cashRegisterCalculator.calculateTotalIndividualDenominationValue(requiredChange);
-        boolean requiredChangeIsADenomination = cashRegisterCalculator.getCashRegisterDenominations().containsKey(requiredChange);
-        double changeGivenSoFar = 0;
-        double changeInDenominations = 0.00;
-//        eg. required change = 2.00;
-//        if required change value exists in the register as a denomination and the value of the denomination is equal to the required change value
-        if (requiredChangeIsADenomination && requiredChange <= amountOfDenominationInRegister){
-//            changeGivenSoFar = key/value
-        }
-        if (requiredChangeIsADenomination && requiredChange > amountOfDenominationInRegister){
-                changeGivenSoFar = requiredChange - amountOfDenominationInRegister;
-                getNextDenomination(cashRegisterCalculator.getCashRegisterDenominations().get(requiredChange));
-        }
-        return changeInDenominations;
-    }
+//    public ArrayList<Double> getChangeInDenominations(Double requiredChange){
+//        ArrayList<Double> changeInDenominations = new ArrayList<>();
+//
+//        if(cashRegisterCalculator.getCashRegisterDenominations().containsKey(requiredChange) && )
+//
+//    }
 
 
     private double getNextDenomination(int currentDenomination){
@@ -67,26 +52,4 @@ public class TransactionManager {
     }
 
 
-    //    private double calculateChange(double customerFunds, double merchandiseValue) {
-//        double change = 0.00;
-//        if(customerFunds > merchandiseValue) {
-//
-//        }
-////        move to different method, such as giveChange
-////        if(change > cashRegisterCalculator.getCashRegisterBalance()){
-////            throw new InsufficientCashRegisterFundsException("Unable to provide change");
-////        }
-//        return change;
-//    }
-
-
-//    Set<Double> keySet = cashRegisterCalculator.getCashRegisterDenominations().keySet();
-//    ArrayList<Double> keyslist = new ArrayList<>();
-//        keyslist.addAll(keySet);
-//Collections.sort(keyslist);
-//        Collections.reverse(keyslist);
-//
-//         for(Double key : keyslist){
-//        System.out.println(key);
-//    }
 }
