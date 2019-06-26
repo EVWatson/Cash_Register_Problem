@@ -20,14 +20,16 @@ public class Main {
         TransactionManager transactionManager = new TransactionManager(cashRegisterCalculator);
 
 
-        int merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
+        double merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
 //        cashRegister.getCashRegisterDenominations().remove(10.00);
-        int customerMoney = 40;
+        double customerMoney = 20;
 
 
         try{
             Double change = transactionManager.conductTransaction(customerMoney, merchanseAmount);
+            ArrayList<Double> changeInDenominations = transactionManager.getChangeInDenominations(change);
             System.out.println(change);
+            System.out.println(changeInDenominations);
         }
         catch (Exception message){
             System.err.println(message.getMessage());
