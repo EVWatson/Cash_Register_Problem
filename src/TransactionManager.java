@@ -35,51 +35,32 @@ public class TransactionManager {
 
     public ArrayList<Double> getChangeInDenominations(Double requiredChange){
         ArrayList<Double> changeInDenominations = new ArrayList<>();
-//        number of actual notes/coins available:
-        Integer numberOfCurrentDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(requiredChange);
-//        value of notes/coins available:
 
-        Double numberOfDenominationNeeded = requiredChange/requiredChange;
 
         for (Double denomination: this.denominationKeys){
+            Integer numberOfDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
+            Double numberOfDenominationNeeded = requiredChange/denomination;
 //            eg. $10 needed, $10 is a denomination, there are enough $10 notes available to give $10 change
-            if(requiredChange.equals(denomination) && numberOfCurrentDenominationAvailable > 0){
+            if(denomination > requiredChange){
+                continue;
+            }
+            if(requiredChange.equals(denomination) && numberOfDenominationAvailable > 0){
                 changeInDenominations.add(denomination);
             }
 //            eg, $10 needed, is equal to denomination, but there are no 10 notes available: check next denomination.
-            if(requiredChange.equals(denomination) && numberOfCurrentDenominationAvailable < numberOfDenominationNeeded){
-                Double nextDenomination = getNextDenomination(requiredChange);
-                Integer numberOfNextDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(nextDenomination);
-                if( (numberOfNextDenominationAvailable.equals(numberOfDenominationNeeded)) ){
+                if( (numberOfDenominationAvailable >= numberOfDenominationNeeded) ){
                     changeInDenominations.add(denomination);
-                }else {
-                    getNextDenomination(nextDenomination);
                 }
-//
-//                requiredChange = requiredChange - valueOfCurrentDenominationAvailable;
-//                changeInDenominations.add(numberOfCurrentDenominationAvailable * denomination);
             }
-        }
         return changeInDenominations;
     }
+
 
     private List<Double> sortCashRegisterKeys(){
         this.denominationKeys = new ArrayList<>(cashRegisterCalculator.getCashRegisterDenominations().keySet());
        Collections.sort(this.denominationKeys);
+       Collections.reverse(this.denominationKeys);
        return this.denominationKeys;
     }
-
-
-    private double getNextDenomination(double currentDenomination){
-        Double nextDenomination = 0.00;
-
-       for(int index = 0; index <= denominationKeys.size(); index ++){
-           if(denominationKeys.get(index).equals(currentDenomination)) {
-               nextDenomination = this.denominationKeys.get(index -1);
-           }
-       }
-       return nextDenomination;
-    }
-
 
 }

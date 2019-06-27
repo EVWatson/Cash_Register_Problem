@@ -126,11 +126,12 @@ public class TransactionManagerTest {
     @Test
     public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsUsedToMakeChange(){
 
-        this.cashRegisterCalculator.getCashRegisterDenominations().remove(10.00);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(5.00);
         expectedChangeDenomination.add(5.00);
+
         ArrayList<Double> actualChangeDenomination = transactionManager.getChangeInDenominations(10.00);
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);

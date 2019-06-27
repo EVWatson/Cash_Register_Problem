@@ -20,13 +20,7 @@ public class CashRegisterCalculator {
         return valueInDollars;
     }
 
-    public Double calculateTotalIndividualDenominationValue(Double key){
-       return this.getCashRegisterDenominations().get(key) * key;
-    }
 
-//    public Double getNumberOfDenominationRequiredForValue(Double Double key){
-//        return this.getCashRegisterDenominations().get(key);
-//    }
 
     public int getCashRegisterBalance() {
         return cashRegisterBalance;
