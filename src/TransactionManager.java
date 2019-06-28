@@ -18,7 +18,7 @@ public class TransactionManager {
         double changeValue = 0.00;
 
         if(customerFunds == merchandiseValue){
-            System.out.println("no change needed");
+            return changeValue;
         }
         if(customerFunds < merchandiseValue){
             throw new InsufficientCustomerPaymentException("Unable to process transaction; insufficient customer payment.");
@@ -36,7 +36,6 @@ public class TransactionManager {
     public ArrayList<Double> getChangeInDenominations(Double requiredChange)throws InsufficientCashRegisterFundsException{
         ArrayList<Double> changeInDenominations = new ArrayList<>();
 
-
         for (Double denomination: this.denominationKeys){
             Integer numberOfDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
             Integer numberOfDenominationNeeded = (int) (requiredChange / denomination);
@@ -44,16 +43,8 @@ public class TransactionManager {
             if(denomination > requiredChange){
                 continue;
             }
-            if(requiredChange.equals(denomination) && numberOfDenominationAvailable > 0){
-                changeInDenominations.add(denomination);
-                requiredChange = requiredChange - denomination;
-
-                if(requiredChange == 0){
-                    return changeInDenominations;
-                }
-            }
             if( (numberOfDenominationAvailable > 0) ){
-                Integer numberOfDenominationNeedingToBeAdded = 0;
+                Integer numberOfDenominationNeedingToBeAdded;
 
                 if ( numberOfDenominationAvailable < numberOfDenominationNeeded){
                     numberOfDenominationNeedingToBeAdded = numberOfDenominationAvailable;
@@ -61,15 +52,16 @@ public class TransactionManager {
                 else {
                     numberOfDenominationNeedingToBeAdded = numberOfDenominationNeeded;
                 }
-                for(int numberOfDenominationToBeAdded = 1; numberOfDenominationToBeAdded <= numberOfDenominationNeedingToBeAdded ; numberOfDenominationToBeAdded++){
-                    changeInDenominations.add(denomination);
-                    requiredChange = requiredChange - denomination;
-                }
+                
+                List<Double> denominationsToAdd = Collections.nCopies(numberOfDenominationNeedingToBeAdded, denomination);
+                changeInDenominations.addAll(denominationsToAdd);
+                requiredChange = requiredChange - (denomination * numberOfDenominationNeedingToBeAdded);
+
                 if(requiredChange == 0){
                     return changeInDenominations;
                 }
             }
-            }
+        }
         throw new InsufficientCashRegisterFundsException("Unable to provide change");
     }
 

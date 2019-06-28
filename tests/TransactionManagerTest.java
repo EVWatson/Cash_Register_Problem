@@ -21,20 +21,13 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenFundsGivenAreGreaterThanMerchandiseValueChangeOwingIsCalculated() throws InsufficientCashRegisterFundsException{
-        double product = merchandise.getMerchandise().get("Whole gateau");
+    public void whenFundsGivenAreGreaterThanMerchandiseValueChangeOwingIsCalculated() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        double product = 30;
         double customerPayment = 50;
 
         double expectedChange = 20;
 
-        double actualChange = 0.00;
-
-        try {
-            actualChange = transactionManager.conductTransaction(customerPayment, product);
-        }
-        catch (InsufficientCustomerPaymentException message) {
-            message.getMessage();
-        }
+        double actualChange = transactionManager.conductTransaction(customerPayment, product);
 
         assertEquals(expectedChange, actualChange, 0);
     }
@@ -57,37 +50,23 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenFundsGivenAreEqualToMerchandiseValueCustomerWillNotReceiveAnyChange() throws InsufficientCashRegisterFundsException{
+    public void whenFundsGivenAreEqualToMerchandiseValueCustomerWillNotReceiveAnyChange() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
         double merchValue = 100;
         double customerFunds = 100;
 
         double expectedChange = 0;
-        double actualChange = 0;
-
-        try {
-            actualChange = transactionManager.conductTransaction(customerFunds, merchValue);
-        }
-        catch (InsufficientCustomerPaymentException message) {
-            message.getMessage();
-        }
+        double actualChange = transactionManager.conductTransaction(customerFunds, merchValue);
 
         assertEquals(expectedChange, actualChange, 0);
     }
 
     @Test
-    public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided() throws InsufficientCustomerPaymentException{
+    public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided() throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
         double customerPayment = 50;
         double merchandisePrice = merchandise.getMerchandise().get("Chocolate eclair");
 
         double expectedChange = 40;
-        double actualChange = 0;
-
-        try {
-            actualChange = transactionManager.conductTransaction(customerPayment, merchandisePrice);
-        }
-        catch (InsufficientCashRegisterFundsException message){
-            message.getMessage();
-        }
+        double actualChange = transactionManager.conductTransaction(customerPayment, merchandisePrice);
 
         assertEquals(expectedChange, actualChange, 0);
 
@@ -113,7 +92,7 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenRequiredChangeIsEqualToADenominationThatIsAvailableAndSufficientChangeIsGivenInThatDenomination()throws InsufficientCashRegisterFundsException {
+    public void whenRequiredChangeIsEqualToASingleDenominationThatIsSufficientChangeIsGivenInThatDenomination()throws InsufficientCashRegisterFundsException {
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(10.00);
@@ -151,6 +130,7 @@ public class TransactionManagerTest {
 
     @Test
     public void whenChangeCannotBeGivenWithASingleDenominationMultipleDenominationsAreUsed()throws InsufficientCashRegisterFundsException{
+
         cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
         cashRegisterCalculator.getCashRegisterDenominations().replace(5.00, 1);
 
@@ -181,6 +161,7 @@ public class TransactionManagerTest {
 
     @Test
     public void whenChangeRequiredCannotBeMadeFromAvailableCashRegisterDenominationsThrowsException() {
+
         cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
         cashRegisterCalculator.getCashRegisterDenominations().replace(5.00, 0);
         cashRegisterCalculator.getCashRegisterDenominations().replace(2.00, 0);
