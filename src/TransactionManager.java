@@ -40,7 +40,7 @@ public class TransactionManager {
         for (Double denomination: this.denominationKeys){
             Integer numberOfDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
             Double numberOfDenominationNeeded = requiredChange/denomination;
-//            eg. $10 needed, $10 is a denomination, there are enough $10 notes available to give $10 change
+
             if(denomination > requiredChange){
                 continue;
             }
@@ -49,10 +49,23 @@ public class TransactionManager {
             }
 //            eg, $10 needed, is equal to denomination, but there are no 10 notes available: check next denomination.
                 if( (numberOfDenominationAvailable >= numberOfDenominationNeeded) ){
-                    changeInDenominations.add(denomination);
+                    for(int numberOfDenominationToBeAdded = 1; numberOfDenominationToBeAdded <= numberOfDenominationNeeded; numberOfDenominationToBeAdded++){
+                        changeInDenominations.add(denomination);
+                    }
+                    if(requiredChange.equals(calculateChangeGivenSoFar(changeInDenominations))){
+                        return changeInDenominations;
+                    }
                 }
             }
         return changeInDenominations;
+    }
+
+    private Double calculateChangeGivenSoFar(ArrayList<Double> changeInDenominations){
+        Double total = 0.00;
+        for (Double denomination : changeInDenominations){
+            total += denomination;
+        }
+        return total;
     }
 
 
