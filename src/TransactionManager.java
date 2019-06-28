@@ -14,12 +14,12 @@ public class TransactionManager {
 
     }
 
-    public Double conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+    public ArrayList<Double> conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
         double changeValue = 0.00;
 
-        if(customerFunds == merchandiseValue){
-            return changeValue;
-        }
+//        if(customerFunds == merchandiseValue){
+//
+//        }
         if(customerFunds < merchandiseValue){
             throw new InsufficientCustomerPaymentException("Unable to process transaction; insufficient customer payment.");
         }
@@ -29,11 +29,15 @@ public class TransactionManager {
             throw new InsufficientCashRegisterFundsException("Unable to provide change");
             }
         }
-        return changeValue;
+
+        ArrayList<Double> returnedChange = getChangeInDenominations(changeValue);
+//        cashRegister.addToTill(customerFunds)
+        cashRegisterCalculator.removeFromTill(returnedChange);
+        return returnedChange;
     }
 
 
-    public ArrayList<Double> getChangeInDenominations(Double requiredChange)throws InsufficientCashRegisterFundsException{
+    private ArrayList<Double> getChangeInDenominations(Double requiredChange)throws InsufficientCashRegisterFundsException{
         ArrayList<Double> changeInDenominations = new ArrayList<>();
 
         for (Double denomination: this.denominationKeys){
