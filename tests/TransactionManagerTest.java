@@ -113,7 +113,7 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenRequiredChangeIsEqualToADenominationThatIsAvailableAndSufficientChangeIsGivenInThatDenomination() {
+    public void whenRequiredChangeIsEqualToADenominationThatIsAvailableAndSufficientChangeIsGivenInThatDenomination()throws InsufficientCashRegisterFundsException {
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(10.00);
@@ -124,7 +124,7 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsUsedToMakeChange(){
+    public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsUsedToMakeChange() throws InsufficientCashRegisterFundsException{
 
         cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
 
@@ -138,12 +138,71 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenChangeCannotBeGivenWithASingleDenominationMultipleDenominationsAreUsed(){
+    public void whenRequiredChangeIsNotEqualToADenominationOneOrMoreDenominationAreUsedToMakeUpChangeRequired()throws InsufficientCashRegisterFundsException{
 
+        ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
+        expectedChangeDenomination.add(20.00);
+        expectedChangeDenomination.add(10.00);
+
+        ArrayList<Double> actualChangeDenomination = transactionManager.getChangeInDenominations(30.00);
+
+        assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
 
     @Test
-    public void whenChangeRequiredCannotBeMadeFromAvailableCashRegisterDenominationsThrowsException(){
+    public void whenChangeCannotBeGivenWithASingleDenominationMultipleDenominationsAreUsed()throws InsufficientCashRegisterFundsException{
+        cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(5.00, 1);
+
+        ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
+        expectedChangeDenomination.add(5.00);
+        expectedChangeDenomination.add(2.00);
+        expectedChangeDenomination.add(2.00);
+        expectedChangeDenomination.add(1.00);
+
+        ArrayList<Double> actualChangeDenomination = transactionManager.getChangeInDenominations(10.00);
+
+        assertEquals(expectedChangeDenomination,actualChangeDenomination);
+    }
+
+    @Test
+    public void whenChangeRequiredIsNotAWholeNumberChangeIsMadeUpUsingMultipleDenominations()throws InsufficientCashRegisterFundsException{
+
+        ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
+        expectedChangeDenomination.add(2.00);
+        expectedChangeDenomination.add(2.00);
+        expectedChangeDenomination.add(0.5);
+
+
+        ArrayList<Double> actualChangeDenomination = transactionManager.getChangeInDenominations(4.50);
+
+        assertEquals(expectedChangeDenomination,actualChangeDenomination);
+    }
+
+    @Test
+    public void whenChangeRequiredCannotBeMadeFromAvailableCashRegisterDenominationsThrowsException() {
+        cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(5.00, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(2.00, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(1.00, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(0.50, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(0.20, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(0.10, 0);
+        cashRegisterCalculator.getCashRegisterDenominations().replace(0.05, 0);
+
+        String expectedMessage = "Unable to provide change; insufficient funds available";
+
+        String actualMessage = "";
+
+
+        try {
+            transactionManager.getChangeInDenominations(10.00);
+        }
+        catch (InsufficientCashRegisterFundsException message){
+            actualMessage = message.getMessage();
+        }
+
+        assertEquals(expectedMessage, actualMessage);
 
     }
 

@@ -33,39 +33,44 @@ public class TransactionManager {
     }
 
 
-    public ArrayList<Double> getChangeInDenominations(Double requiredChange){
+    public ArrayList<Double> getChangeInDenominations(Double requiredChange)throws InsufficientCashRegisterFundsException{
         ArrayList<Double> changeInDenominations = new ArrayList<>();
 
 
         for (Double denomination: this.denominationKeys){
             Integer numberOfDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
-            Double numberOfDenominationNeeded = requiredChange/denomination;
+            Integer numberOfDenominationNeeded = (int) (requiredChange / denomination);
 
             if(denomination > requiredChange){
                 continue;
             }
             if(requiredChange.equals(denomination) && numberOfDenominationAvailable > 0){
                 changeInDenominations.add(denomination);
-            }
-//            eg, $10 needed, is equal to denomination, but there are no 10 notes available: check next denomination.
-                if( (numberOfDenominationAvailable >= numberOfDenominationNeeded) ){
-                    for(int numberOfDenominationToBeAdded = 1; numberOfDenominationToBeAdded <= numberOfDenominationNeeded; numberOfDenominationToBeAdded++){
-                        changeInDenominations.add(denomination);
-                    }
-                    if(requiredChange.equals(calculateChangeGivenSoFar(changeInDenominations))){
-                        return changeInDenominations;
-                    }
+                requiredChange = requiredChange - denomination;
+
+                if(requiredChange == 0){
+                    return changeInDenominations;
                 }
             }
-        return changeInDenominations;
-    }
+            if( (numberOfDenominationAvailable > 0) ){
+                Integer numberOfDenominationNeedingToBeAdded = 0;
 
-    private Double calculateChangeGivenSoFar(ArrayList<Double> changeInDenominations){
-        Double total = 0.00;
-        for (Double denomination : changeInDenominations){
-            total += denomination;
-        }
-        return total;
+                if ( numberOfDenominationAvailable < numberOfDenominationNeeded){
+                    numberOfDenominationNeedingToBeAdded = numberOfDenominationAvailable;
+                }
+                else {
+                    numberOfDenominationNeedingToBeAdded = numberOfDenominationNeeded;
+                }
+                for(int numberOfDenominationToBeAdded = 1; numberOfDenominationToBeAdded <= numberOfDenominationNeedingToBeAdded ; numberOfDenominationToBeAdded++){
+                    changeInDenominations.add(denomination);
+                    requiredChange = requiredChange - denomination;
+                }
+                if(requiredChange == 0){
+                    return changeInDenominations;
+                }
+            }
+            }
+        throw new InsufficientCashRegisterFundsException("Unable to provide change");
     }
 
 
