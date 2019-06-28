@@ -40,9 +40,6 @@ public class TransactionManager {
             Integer numberOfDenominationAvailable = cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
             Integer numberOfDenominationNeeded = (int) (requiredChange / denomination);
 
-            if(denomination > requiredChange){
-                continue;
-            }
             if( (numberOfDenominationAvailable > 0) ){
                 Integer numberOfDenominationNeedingToBeAdded;
 
@@ -52,15 +49,15 @@ public class TransactionManager {
                 else {
                     numberOfDenominationNeedingToBeAdded = numberOfDenominationNeeded;
                 }
-                
+
                 List<Double> denominationsToAdd = Collections.nCopies(numberOfDenominationNeedingToBeAdded, denomination);
                 changeInDenominations.addAll(denominationsToAdd);
                 requiredChange = requiredChange - (denomination * numberOfDenominationNeedingToBeAdded);
 
-                if(requiredChange == 0){
-                    return changeInDenominations;
-                }
             }
+        }
+        if(requiredChange == 0){
+            return changeInDenominations;
         }
         throw new InsufficientCashRegisterFundsException("Unable to provide change");
     }
