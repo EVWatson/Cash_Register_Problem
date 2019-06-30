@@ -177,8 +177,13 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenChangeIsGivenDenominationsAreRemovedFromCashRegister(){
-        
+    public void whenChangeIsGivenDenominationsAreRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        transactionManager.conductTransaction(20.00, 10.00);
+
+        Integer expectedNumberOf10InTill = 9;
+        Integer actualNumberOf10sInTill = cashRegisterCalculator.getCashRegisterDenominations().get(10.00);
+
+        assertEquals(expectedNumberOf10InTill, actualNumberOf10sInTill);
     }
 
 
