@@ -17,9 +17,6 @@ public class TransactionManager {
     public ArrayList<Double> conductTransaction(double customerFunds, double merchandiseValue) throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
         double changeValue = 0.00;
 
-//        if(customerFunds == merchandiseValue){
-//
-//        }
         if(customerFunds < merchandiseValue){
             throw new InsufficientCustomerPaymentException("Unable to process transaction; insufficient customer payment.");
         }

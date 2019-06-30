@@ -26,9 +26,7 @@ public class Main {
 
 
         try{
-            Double change = transactionManager.conductTransaction(customerMoney, merchanseAmount);
-            ArrayList<Double> changeInDenominations = transactionManager.getChangeInDenominations(change);
-            System.out.println(change);
+            ArrayList<Double> changeInDenominations = transactionManager.conductTransaction(customerMoney, merchanseAmount);
             System.out.println(changeInDenominations);
         }
         catch (Exception message){
