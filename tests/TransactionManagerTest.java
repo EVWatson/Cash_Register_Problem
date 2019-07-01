@@ -177,14 +177,30 @@ public class TransactionManagerTest {
     }
 
     @Test
-    public void whenChangeIsGivenDenominationsAreRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+    public void whenChangeIsGivenInASingleDenominationItIsRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
         transactionManager.conductTransaction(20.00, 10.00);
 
-        Integer expectedNumberOf10InTill = 9;
+        Integer expectedNumberOf10sInTill = 9;
         Integer actualNumberOf10sInTill = cashRegisterCalculator.getCashRegisterDenominations().get(10.00);
 
-        assertEquals(expectedNumberOf10InTill, actualNumberOf10sInTill);
+        assertEquals(expectedNumberOf10sInTill, actualNumberOf10sInTill);
     }
+
+    @Test
+    public void whenChangeIsGivenInMultipleDenominationsTheyAreRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        transactionManager.conductTransaction(50.00, 20.00);
+
+        ArrayList<Integer> expectedNumberOfDenominationsInTill = new ArrayList<>();
+        expectedNumberOfDenominationsInTill.add(4);
+        expectedNumberOfDenominationsInTill.add(9);
+
+        ArrayList<Integer> actualNumberOfDenominationsInTill = new ArrayList<>();
+        actualNumberOfDenominationsInTill.add(cashRegisterCalculator.getCashRegisterDenominations().get(20.00));
+        actualNumberOfDenominationsInTill.add(cashRegisterCalculator.getCashRegisterDenominations().get(10.00));
+
+        assertEquals(expectedNumberOfDenominationsInTill, actualNumberOfDenominationsInTill);
+    }
+
 
 
 }
