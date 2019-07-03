@@ -22,8 +22,8 @@ public class Main {
 
         double merchanseAmount = merchandise.getMerchandise().get("Chocolate eclair");
 //        cashRegister.getCashRegisterDenominations().remove(10.00);
-        double customerMoney = 20;
-
+        ArrayList<Double> customerMoney = new ArrayList<>();
+        customerMoney.add(20.00);
 
         try{
             ArrayList<Double> changeInDenominations = transactionManager.conductTransaction(customerMoney, merchanseAmount);

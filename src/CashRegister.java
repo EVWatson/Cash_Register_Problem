@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 public class CashRegister {
 
     private HashMap<Double, Integer> cashRegisterDenominations;
-    private int totalCashRegisterFunds;
 
     public CashRegister(){
         this.cashRegisterDenominations = setUpCashRegister();
@@ -22,6 +21,7 @@ public class CashRegister {
         cashRegisterFunds.put(10.00, 10);
         cashRegisterFunds.put(20.00, 5);
         cashRegisterFunds.put(50.00, 2);
+        cashRegisterFunds.put(100.00, 0);
 
         return cashRegisterFunds;
     }

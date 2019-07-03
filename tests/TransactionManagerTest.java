@@ -9,34 +9,38 @@ public class TransactionManagerTest {
 
 
     private TransactionManager transactionManager;
-    private Merchandise merchandise;
     private CashRegisterCalculator cashRegisterCalculator;
+    private ArrayList<Double> tender;
 
     @Before
     public void setUp(){
         CashRegister cashRegister = new CashRegister();
         this.cashRegisterCalculator = new CashRegisterCalculator(cashRegister);
         this. transactionManager = new TransactionManager(cashRegisterCalculator);
-        this.merchandise = new Merchandise();
+        this.tender = new ArrayList<>();
     }
 
     @Test
     public void whenFundsGivenAreGreaterThanMerchandiseValueChangeOwingIsCalculated() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
         ArrayList<Double> expectedChange = new ArrayList<>();
         expectedChange.add(20.00);
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(50.00);
 
-        ArrayList<Double> actualChange = transactionManager.conductTransaction(50.00, 30.00);
+        ArrayList<Double> actualChange = transactionManager.conductTransaction(tender, 30.00);
 
         assertEquals(expectedChange, actualChange);
     }
 
     @Test
     public void whenFundsGivenAreLessThanMerchandiseValueExceptionIsThrown() throws InsufficientCashRegisterFundsException{
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(99.00);
         String expectedMessage = "Unable to process transaction; insufficient customer payment.";
         String actualMessage = "";
 
         try {
-            transactionManager.conductTransaction(99.00, 100.00);
+            transactionManager.conductTransaction(tender, 100.00);
         }
         catch (InsufficientCustomerPaymentException message) {
             actualMessage = message.getMessage();
@@ -48,18 +52,22 @@ public class TransactionManagerTest {
     @Test
     public void whenFundsGivenAreEqualToMerchandiseValueCustomerWillNotReceiveAnyChange() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
         ArrayList<Double> expectedChange = new ArrayList<>();
-        ArrayList<Double> actualChange = transactionManager.conductTransaction(100.00, 100.00);
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(100.00);
+        ArrayList<Double> actualChange = transactionManager.conductTransaction(tender, 100.00);
 
         assertEquals(expectedChange, actualChange);
     }
 
     @Test
     public void whenCashRegisterContainsSufficientFundsChangeCanBeProvided() throws InsufficientCashRegisterFundsException, InsufficientCustomerPaymentException{
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(50.00);
         ArrayList<Double> expectedChange = new ArrayList<>();
         expectedChange.add(20.00);
         expectedChange.add(20.00);
 
-        ArrayList<Double> actualChange = transactionManager.conductTransaction(50.00, 10.00);
+        ArrayList<Double> actualChange = transactionManager.conductTransaction(tender, 10.00);
 
         assertEquals(expectedChange, actualChange);
 
@@ -67,11 +75,14 @@ public class TransactionManagerTest {
 
     @Test
     public void whenCashRegisterDoesNotContainSufficientFundsToProvideChangeExceptionIsThrown()throws InsufficientCustomerPaymentException {
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(5000.00);
+
         String expectedMessage = "Unable to provide change; insufficient funds available";
         String actualMessage = "";
 
         try {
-            transactionManager.conductTransaction(5000.00, 10.00);
+            transactionManager.conductTransaction(tender, 10.00);
         }
         catch (InsufficientCashRegisterFundsException message) {
             actualMessage = message.getMessage();
@@ -83,10 +94,12 @@ public class TransactionManagerTest {
 
     @Test
     public void whenRequiredChangeIsEqualToASingleDenominationThatIsSufficientChangeIsGivenInThatDenomination()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException {
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(20.00);
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(10.00);
 
-        ArrayList<Double> actualChangeDenomination = (transactionManager.conductTransaction(20.00, 10.00));
+        ArrayList<Double> actualChangeDenomination = (transactionManager.conductTransaction(tender, 10.00));
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
@@ -95,24 +108,28 @@ public class TransactionManagerTest {
     public void whenRequiredChangeIsEqualToADenominationThatIsUnavailableNextDenominationDownIsUsedToMakeChange() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
 
         cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(20.00);
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(5.00);
         expectedChangeDenomination.add(5.00);
 
-        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(20.00, 10.00);
+        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(tender, 10.00);
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
 
     @Test
     public void whenRequiredChangeIsNotEqualToADenominationOneOrMoreDenominationAreUsedToMakeUpChangeRequired()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(50.00);
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(20.00);
         expectedChangeDenomination.add(10.00);
 
-        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(50.00, 20.00);
+        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(tender, 20.00);
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
@@ -123,27 +140,31 @@ public class TransactionManagerTest {
         cashRegisterCalculator.getCashRegisterDenominations().replace(10.00, 0);
         cashRegisterCalculator.getCashRegisterDenominations().replace(5.00, 1);
 
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(20.00);
+
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(5.00);
         expectedChangeDenomination.add(2.00);
         expectedChangeDenomination.add(2.00);
         expectedChangeDenomination.add(1.00);
 
-        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(20.00, 10.00);
+        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(tender, 10.00);
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
 
     @Test
     public void whenChangeRequiredIsNotAWholeNumberChangeIsMadeUpUsingMultipleDenominations()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(10.00);
 
         ArrayList<Double> expectedChangeDenomination = new ArrayList<>();
         expectedChangeDenomination.add(2.00);
         expectedChangeDenomination.add(2.00);
         expectedChangeDenomination.add(0.5);
 
-
-        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(10.00,5.50);
+        ArrayList<Double> actualChangeDenomination = transactionManager.conductTransaction(tender,5.50);
 
         assertEquals(expectedChangeDenomination,actualChangeDenomination);
     }
@@ -160,13 +181,16 @@ public class TransactionManagerTest {
         cashRegisterCalculator.getCashRegisterDenominations().replace(0.10, 0);
         cashRegisterCalculator.getCashRegisterDenominations().replace(0.05, 0);
 
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(20.00);
+
         String expectedMessage = "Unable to provide change; insufficient funds available";
 
         String actualMessage = "";
 
 
         try {
-            transactionManager.conductTransaction(20.00, 10.00);
+            transactionManager.conductTransaction(tender, 10.00);
         }
         catch (InsufficientCashRegisterFundsException message){
             actualMessage = message.getMessage();
@@ -178,7 +202,9 @@ public class TransactionManagerTest {
 
     @Test
     public void whenChangeIsGivenInASingleDenominationItIsRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
-        transactionManager.conductTransaction(20.00, 10.00);
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(20.00);
+        transactionManager.conductTransaction(tender, 10.00);
 
         Integer expectedNumberOf10sInTill = 9;
         Integer actualNumberOf10sInTill = cashRegisterCalculator.getCashRegisterDenominations().get(10.00);
@@ -188,7 +214,9 @@ public class TransactionManagerTest {
 
     @Test
     public void whenChangeIsGivenInMultipleDenominationsTheyAreRemovedFromCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
-        transactionManager.conductTransaction(50.00, 20.00);
+        ArrayList<Double> tender = new ArrayList<>();
+        tender.add(50.00);
+        transactionManager.conductTransaction(tender, 20.00);
 
         ArrayList<Integer> expectedNumberOfDenominationsInTill = new ArrayList<>();
         expectedNumberOfDenominationsInTill.add(4);
@@ -201,6 +229,21 @@ public class TransactionManagerTest {
         assertEquals(expectedNumberOfDenominationsInTill, actualNumberOfDenominationsInTill);
     }
 
+    @Test
+    public void singleDenominationsGivenAsCustomerPaymentAreAddedToCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        tender.add(10.00);
+        transactionManager.conductTransaction(tender, 5.00);
+
+        Integer expectedNumberOf10sInTill = 11;
+        Integer actualNumberOf10sInTill = cashRegisterCalculator.getCashRegisterDenominations().get(10.00);
+
+        assertEquals(expectedNumberOf10sInTill, actualNumberOf10sInTill);
+    }
+//
+//    @Test
+//    public void mulitipleDenominationsGivenAsCustomerPaymentAreAddedToCashRegister()throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+//
+//    }
 
 
 }
