@@ -3,13 +3,15 @@ import java.util.*;
 
 public class TransactionManager {
 
+    private CashRegister cashRegister;
     private CashRegisterCalculator cashRegisterCalculator;
 
     private List<Double> denominationKeys;
 
 
-    public TransactionManager(CashRegisterCalculator cashRegisterCalculator){
-        this.cashRegisterCalculator = cashRegisterCalculator;
+    public TransactionManager(CashRegister cashRegister){
+        this.cashRegister = cashRegister;
+        this.cashRegisterCalculator = new CashRegisterCalculator(this.cashRegister);
         this.denominationKeys = sortCashRegisterKeys();
 
     }

@@ -22,6 +22,8 @@ public class TransactionManagerTest {
 
     @Test
     public void whenFundsGivenAreGreaterThanMerchandiseValueChangeOwingIsCalculated() throws InsufficientCustomerPaymentException, InsufficientCashRegisterFundsException{
+        this.cashRegisterCalculator.getCashRegisterDenominations();
+
         ArrayList<Double> expectedChange = new ArrayList<>();
         expectedChange.add(20.00);
         ArrayList<Double> tender = new ArrayList<>();
