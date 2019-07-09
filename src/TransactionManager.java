@@ -33,8 +33,8 @@ public class TransactionManager {
         }
 
         ArrayList<Double> returnedChange = getChangeInDenominations(changeValue);
-        addToTill(customerTender);
-        removeFromTill(returnedChange);
+        cashRegister.addToTill(customerTender);
+        cashRegister.removeFromTill(returnedChange);
         return returnedChange;
     }
 
@@ -68,19 +68,6 @@ public class TransactionManager {
         throw new InsufficientCashRegisterFundsException("Unable to provide change");
     }
 
-    public void removeFromTill(ArrayList<Double> returnedChange){
-        for(Double denomination : returnedChange) {
-            Integer currentValue = this.cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
-            this.cashRegisterCalculator.getCashRegisterDenominations().replace(denomination, currentValue - 1);
-        }
-    }
-
-    public void addToTill(ArrayList<Double> customerTender){
-        for(Double denomination : customerTender) {
-            Integer currentValue = this.cashRegisterCalculator.getCashRegisterDenominations().get(denomination);
-            this.cashRegisterCalculator.getCashRegisterDenominations().replace(denomination, currentValue + 1);
-        }
-    }
 
 
     private List<Double> sortCashRegisterKeys(){

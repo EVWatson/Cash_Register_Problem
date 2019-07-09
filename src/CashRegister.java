@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,29 @@ public class CashRegister {
 //        this.cashRegisterDenominations = initialiseCashRegister();
     }
 
+    public void removeFromTill(ArrayList<Double> returnedChange){
+        for(Double denomination : returnedChange) {
+            Integer currentValue = this.cashRegisterFunds.get(denomination);
+            this.cashRegisterFunds.replace(denomination, currentValue - 1);
+        }
+    }
+
+    public void addToTill(ArrayList<Double> customerTender){
+        for(Double denomination : customerTender) {
+            Integer currentValue = this.cashRegisterFunds.get(denomination);
+            this.cashRegisterFunds.replace(denomination, currentValue + 1);
+        }
+    }
+
+    public void upateTill(ArrayList<Double> returnedChange, ArrayList<Double> customerTender){
+        ArrayList<Double> value;
+        for(Double denomination : value) {
+            value = returnedChange;
+            Integer currentValue = this.cashRegisterFunds.get(denomination);
+            this.cashRegisterFunds.replace(denomination, currentValue - 1);
+        }
+        if()
+    }
 
     public HashMap<Double, Integer> getCashRegisterFunds() {
         return cashRegisterFunds;

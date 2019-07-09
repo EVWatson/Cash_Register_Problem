@@ -16,7 +16,7 @@ public class TransactionManagerTest {
     public void setUp(){
         CashRegister cashRegister = new CashRegister();
         this.cashRegisterCalculator = new CashRegisterCalculator(cashRegister);
-        this. transactionManager = new TransactionManager(cashRegisterCalculator);
+        this. transactionManager = new TransactionManager(cashRegister);
         this.tender = new ArrayList<>();
     }
 
